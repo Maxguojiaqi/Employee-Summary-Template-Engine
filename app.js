@@ -25,7 +25,6 @@ async function teamInfoRecorder(){
     console.log('________________________________________________________')
     let {teamMemberNum : teamNum} = teamMemberNum
     let teamObjs = []
-    console.log(parseInt(teamNum))
     for (let i = 0; i< parseInt(teamNum); i++)
     {   
         // get each member's role
