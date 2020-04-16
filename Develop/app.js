@@ -11,6 +11,84 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 
 
+
+async function teamInfoRecorder(){
+
+    let teamMemberNum = await inquirer.prompt([{
+        message: 'How many member in the team?',
+        name: 'teamMemberNum'
+        }])
+
+    let {teamMemberNum : teamNum} = teamMemberNum
+    console.log(teamNum)
+    let teamObjs = []
+    for (let i = 0; i< teamNum; i++)
+    {
+        let employeeGeneralQuestion = await inquirer.prompt([
+            { type: 'list', 
+              name: 'employeeType', 
+              message: `Please choose team member ${i+1}'s role`, 
+              choices: ['Manager','Engineer','Intern']
+            },
+            { message:`Please enter team member ${i+1}'s Name`,
+              name: 'employeeName'  
+            },
+            { message:`Please enter team member ${i+1}'s ID`,
+              name: 'employeeID'  
+            },
+            { message:`Please enter team member ${i+1}'s Email`,
+              name: 'employeeEmail'  
+            }])
+        
+        console.log(employeeGeneralQuestion.employeeType)
+
+        let {employeeName,employeeID,employeeEmail} = employeeGeneralQuestion
+
+        switch(employeeGeneralQuestion.employeeType){
+            case 'Manager': 
+                let employeeManagerQuestion = await inquirer.prompt([{
+                    message: 'Enter your Office ID',
+                    name: 'officeID'
+                    }])
+                let {officeID} = employeeManagerQuestion
+                let newManager = new Manager(employeeName,employeeID,employeeEmail,officeID)
+                teamObjs.push(newManager)
+                break;
+            case 'Engineer': 
+                let employeeEngineerQuestion = await inquirer.prompt([{
+                    message: 'Enter your GitHub username',
+                    name: 'githubUserName'
+                    }])
+                let {githubUserName} = employeeEngineerQuestion
+                let newEngineer = new Engineer(employeeName,employeeID,employeeEmail,githubUserName)
+                teamObjs.push(newEngineer)
+                break;
+            case 'Intern': 
+                let employeeInternQuestion = await inquirer.prompt([{
+                    message: 'Enter your school name',
+                    name: 'schoolName'
+                    }])
+                let {schoolName} = employeeInternQuestion
+                let newIntern = new Intern(employeeName,employeeID,employeeEmail,schoolName)
+                teamObjs.push(newIntern)
+                break;
+            }
+    }
+
+    teamObjs.forEach(element => {
+        console.log(element)
+    });
+    // return teamObjs
+}
+teamInfoRecorder()
+// let teamMemberArray = teamInfoRecorder()
+// teamMemberArray.forEach(element => {
+//     console.log(element)
+// });
+
+
+
+
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
