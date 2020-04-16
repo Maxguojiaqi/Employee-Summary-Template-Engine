@@ -15,15 +15,21 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12 jumbotron mb-3 team-heading">
-                <h1 class="text-center">My Team</h1>
+            <div class="col-12 jumbotron mb-3 team-heading bg-primary text-white">
+                <h1 class="text-center"><i class="fas fa-star"></i>My Aweseom Team <i class="fas fa-star"></i></h1>
             </div>
         </div>
     </div>
     <div class="container">
         <div class="row">
+            <div class="mb-1 team-area col-12 d-flex justify-content-center">
+                {{ manager }}
+            </div>
+            <div class="mb-1 team-area col-12 d-flex justify-content-center">
+                {{ engineer }}
+            </div>
             <div class="team-area col-12 d-flex justify-content-center">
-                {{ team }}
+                {{ intern }}
             </div>
         </div>
     </div>

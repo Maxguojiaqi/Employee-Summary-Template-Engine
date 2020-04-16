@@ -4,22 +4,30 @@ const fs = require("fs");
 const templatesDir = path.resolve(__dirname, "../templates");
 
 const render = employees => {
-  const html = [];
+  const htmlManager = [];
+  const htmlEngineer = [];
+  const htmlIntern = [];
 
-  html.push(employees
+  htmlManager.push(employees
     .filter(employee => employee.getRole() === "Manager")
     .map(manager => renderManager(manager))
   );
-  html.push(employees
+  htmlEngineer.push(employees
     .filter(employee => employee.getRole() === "Engineer")
     .map(engineer => renderEngineer(engineer))
   );
-  html.push(employees
+  htmlIntern.push(employees
     .filter(employee => employee.getRole() === "Intern")
     .map(intern => renderIntern(intern))
   );
 
-  return renderMain(html.join(""));
+  htmlObj = {
+    manager : htmlManager.join(""),
+    engineer : htmlEngineer.join(""),
+    intern : htmlIntern.join("")
+  }
+
+  return renderMain(htmlObj);
 
 };
 
@@ -53,9 +61,13 @@ const renderIntern = intern => {
   return template;
 };
 
-const renderMain = html => {
-  const template = fs.readFileSync(path.resolve(templatesDir, "main.html"), "utf8");
-  return replacePlaceholders(template, "team", html);
+const renderMain = htmlObj => {
+  let template = fs.readFileSync(path.resolve(templatesDir, "main.html"), "utf8");
+  template = replacePlaceholders(template, "manager", htmlObj.manager)
+  template = replacePlaceholders(template, "engineer", htmlObj.engineer)
+  template = replacePlaceholders(template, "intern", htmlObj.intern)
+
+  return template;
 };
 
 const replacePlaceholders = (template, placeholder, value) => {

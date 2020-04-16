@@ -4,6 +4,10 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const util = require('util')
+
+// turn callback function into a promise function
+const writeFilePromise = util.promisify(fs.writeFile)
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
@@ -47,7 +51,7 @@ async function teamInfoRecorder(){
         switch(employeeGeneralQuestion.employeeType){
             case 'Manager': 
                 let employeeManagerQuestion = await inquirer.prompt([{
-                    message: 'Enter your Office ID',
+                    message: `Enter Office ID for team member ${i+1}`,
                     name: 'officeID'
                     }])
                 let {officeID} = employeeManagerQuestion
@@ -56,7 +60,7 @@ async function teamInfoRecorder(){
                 break;
             case 'Engineer': 
                 let employeeEngineerQuestion = await inquirer.prompt([{
-                    message: 'Enter your GitHub username',
+                    message: `Enter GitHub username for team member ${i+1}`,
                     name: 'githubUserName'
                     }])
                 let {githubUserName} = employeeEngineerQuestion
@@ -65,7 +69,7 @@ async function teamInfoRecorder(){
                 break;
             case 'Intern': 
                 let employeeInternQuestion = await inquirer.prompt([{
-                    message: 'Enter your school name',
+                    message: `Enter school name for team member ${i+1}`,
                     name: 'schoolName'
                     }])
                 let {schoolName} = employeeInternQuestion
@@ -75,10 +79,13 @@ async function teamInfoRecorder(){
             }
     }
 
-    teamObjs.forEach(element => {
-        console.log(element)
-    });
-    // return teamObjs
+    let htmlTemplate = render(teamObjs)
+    console.log(outputPath)
+    // create file folder if not exist
+    if (!fs.existsSync(outputPath)){
+        fs.mkdirSync(outputPath);
+    }
+    await writeFilePromise(outputPath,htmlTemplate)
 }
 teamInfoRecorder()
 // let teamMemberArray = teamInfoRecorder()
